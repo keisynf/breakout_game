@@ -81,7 +81,7 @@ function random(min, max) {
 
 // function to generate random color
 function randomRGB() {
-  return `rgb(${random(0, 255)},${random(0, 255)},${random(0, 255)})`;
+  return `hwb(${random(0, 360)} ${random(0, 50)}% ${random(0, 10)}%)`;
 }
 
 // Classes
@@ -242,15 +242,15 @@ function drawHighestScore() {
 }
 
 function drawGameOver() {
-  ctx.font = "60px Arial";
-  ctx.fillStyle = "red";
+  ctx.font = "900 60px Arial";
+  ctx.fillStyle = "rgb(255, 40, 64)";
   ctx.textAlign = "center";
   ctx.fillText("Game Over", canvas.width / 2, canvas.height / 2);
 }
 
 function drawWin() {
-  ctx.font = "60px Arial";
-  ctx.fillStyle = "green";
+  ctx.font = "900 60px Arial";
+  ctx.fillStyle = "rgb(71, 255, 105)";
   ctx.textAlign = "center";
   ctx.fillText("You Win!", canvas.width / 2, canvas.height / 2);
 }
