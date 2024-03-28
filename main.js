@@ -131,15 +131,26 @@ class Ball {
       for (let r = 0; r < brickRowCount; r++) {
         const brick = bricks[c][r];
         if (brick.status === 1) {
+          let ballRelX = this.x - brick.x;
+          let ballRelY = this.y - brick.y;
           if (
-            this.x + this.ballRadius > brick.x &&
-            this.x - this.ballRadius < brick.x + brickWidth &&
-            this.y + this.ballRadius > brick.y &&
-            this.y - this.ballRadius < brick.y + brickHeight
+            ballRelX > -this.ballRadius &&
+            ballRelX < brickWidth + this.ballRadius &&
+            ballRelY > -this.ballRadius &&
+            ballRelY < brickHeight + this.ballRadius
           ) {
-            brickHit[0] = c;
-            brickHit[1] = r;
-            this.dy = -this.dy;
+            if (
+              ballRelX < this.ballRadius ||
+              ballRelX > brickWidth - this.ballRadius
+            ) {
+              this.dx = -this.dx; // hit the brick on the x-axis
+            }
+            if (
+              ballRelY < this.ballRadius ||
+              ballRelY > brickHeight - this.ballRadius
+            ) {
+              this.dy = -this.dy; // hit the brick on the y-axis
+            }
             brick.status = 0;
             score += 100;
             if (score === brickRowCount * brickColumnCount * 100) {
@@ -258,11 +269,6 @@ function drawWin() {
 function setGameOver() {
   gameOver = true;
   ctx.clearRect(0, 0, canvas.width, canvas.height);
-  ball.draw();
-  paddle.draw();
-
-  drawScore();
-  drawHighestScore();
 
   for (let c = 0; c < brickColumnCount; c++) {
     for (let r = 0; r < brickRowCount; r++) {
@@ -275,6 +281,11 @@ function setGameOver() {
   score = 0;
   button.disabled = false;
   button.textContent = "Play Again";
+  ball.draw();
+  paddle.draw();
+
+  drawScore();
+  drawHighestScore();
   button.focus();
 }
 
