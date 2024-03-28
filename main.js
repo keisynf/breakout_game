@@ -17,7 +17,7 @@ let paddleX = (canvas.width - paddleWidth) / 2;
 const paddleDx = 7;
 
 // Brick variables
-const brickRowCount = 1;
+const brickRowCount = 3;
 const brickColumnCount = 5;
 const brickWidth = 75;
 const brickHeight = 20;
