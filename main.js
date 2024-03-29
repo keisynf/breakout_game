@@ -55,6 +55,8 @@ button.addEventListener("click", function () {
 document.addEventListener("keydown", keyDownHandler, false);
 document.addEventListener("keyup", keyUpHandler, false);
 
+document.addEventListener("mousemove", mouseMoveHandler, false);
+
 // Keyboard functions
 function keyDownHandler(e) {
   if (e.key === "Right" || e.key === "ArrowRight") {
@@ -69,6 +71,13 @@ function keyUpHandler(e) {
     rightPressed = false;
   } else if (e.key === "Left" || e.key === "ArrowLeft") {
     leftPressed = false;
+  }
+}
+
+function mouseMoveHandler(e) {
+  const relativeX = e.clientX - canvas.offsetLeft;
+  if (relativeX > 0 && relativeX < canvas.width) {
+    paddle.x = relativeX - paddle.width / 2;
   }
 }
 
@@ -290,7 +299,6 @@ function setGameOver() {
   score === brickRowCount * brickColumnCount * 100 ? drawWin() : drawGameOver();
   scores.push(score);
   highestScore = Math.max(...scores);
-  score = 0;
   button.disabled = false;
   button.textContent = "Play Again";
   ball.draw();
@@ -299,6 +307,8 @@ function setGameOver() {
   drawScore();
   drawHighestScore();
   button.focus();
+
+  score = 0;
 }
 
 function resetGame() {
