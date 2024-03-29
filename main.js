@@ -11,9 +11,9 @@ let dx = 3;
 let dy = -3;
 
 // Paddle variables
-const paddleHeight = 10;
-const paddleWidth = 75;
-let paddleX = (canvas.width - paddleWidth) / 2;
+const height = 10;
+const width = 75;
+let paddleX = (canvas.width - width) / 2;
 const paddleDx = 7;
 
 // Brick variables
@@ -84,6 +84,29 @@ function randomRGB() {
   return `hwb(${random(0, 360)} ${random(0, 50)}% ${random(0, 10)}%)`;
 }
 
+function RectCircleColliding(circle, rect) {
+  let distX = Math.abs(circle.x - rect.x - rect.width / 2);
+  let distY = Math.abs(circle.y - rect.y - rect.height / 2);
+
+  if (distX > rect.width / 2 + circle.ballRadius) {
+    return false;
+  }
+  if (distY > rect.height / 2 + circle.ballRadius) {
+    return false;
+  }
+
+  if (distX <= rect.width / 2) {
+    return true;
+  }
+  if (distY <= rect.height / 2) {
+    return true;
+  }
+
+  let dx = distX - rect.width / 2;
+  let dy = distY - rect.height / 2;
+  return dx * dx + dy * dy <= circle.ballRadius * circle.ballRadius;
+}
+
 // Classes
 
 class Ball {
@@ -112,12 +135,7 @@ class Ball {
 
     if (this.y + this.dy <= this.ballRadius) {
       this.dy = -this.dy;
-    } else if (
-      this.y + this.dy >=
-        canvas.height - this.ballRadius - paddle.paddleHeight &&
-      this.x - this.ballRadius > paddle.paddleX &&
-      this.x + this.ballRadius < paddle.paddleX + paddle.paddleWidth
-    ) {
+    } else if (RectCircleColliding(this, paddle)) {
       this.dy = -this.dy;
     } else if (this.y + this.dy >= canvas.height - this.ballRadius) {
       setGameOver();
@@ -164,21 +182,17 @@ class Ball {
 }
 
 class Paddle {
-  constructor(paddleHeight, paddleWidth, paddleX, paddleDx, color) {
-    this.paddleHeight = paddleHeight;
-    this.paddleWidth = paddleWidth;
-    this.paddleX = paddleX;
-    this.paddleDx = paddleDx;
+  constructor(height, width, x, y, dx, color) {
+    this.height = height;
+    this.width = width;
+    this.x = x;
+    this.y = y;
+    this.dx = dx;
     this.color = color;
   }
   draw() {
     ctx.beginPath();
-    ctx.rect(
-      this.paddleX,
-      canvas.height - this.paddleHeight,
-      this.paddleWidth,
-      this.paddleHeight
-    );
+    ctx.rect(this.x, this.y, this.width, this.height);
     ctx.fillStyle = this.color;
     ctx.fill();
     ctx.closePath();
@@ -186,12 +200,9 @@ class Paddle {
 
   update() {
     if (rightPressed) {
-      this.paddleX = Math.min(
-        this.paddleX + this.paddleDx,
-        canvas.width - this.paddleWidth
-      );
+      this.x = Math.min(this.x + this.dx, canvas.width - this.width);
     } else if (leftPressed) {
-      this.paddleX = Math.max(this.paddleX - this.paddleDx, 0);
+      this.x = Math.max(this.x - this.dx, 0);
     }
   }
 }
@@ -219,9 +230,10 @@ const ball = new Ball(x, y, dx, dy, ballRadius, randomRGB());
 
 // Create paddle
 const paddle = new Paddle(
-  paddleHeight,
-  paddleWidth,
+  height,
+  width,
   paddleX,
+  canvas.height - height,
   paddleDx,
   randomRGB()
 );
@@ -296,7 +308,7 @@ function resetGame() {
   ball.y = canvas.height - 30;
   ball.dx = 3;
   ball.dy = -3;
-  paddle.paddleX = (canvas.width - paddle.paddleWidth) / 2;
+  paddle.x = (canvas.width - paddle.width) / 2;
   for (let c = 0; c < brickColumnCount; c++) {
     for (let r = 0; r < brickRowCount; r++) {
       bricks[c][r].status = 1;
