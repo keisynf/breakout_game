@@ -56,6 +56,7 @@ document.addEventListener("keydown", keyDownHandler, false);
 document.addEventListener("keyup", keyUpHandler, false);
 
 document.addEventListener("mousemove", mouseMoveHandler, false);
+document.addEventListener("touchmove", touchMoveHandler, false);
 
 // Keyboard functions
 function keyDownHandler(e) {
@@ -76,6 +77,13 @@ function keyUpHandler(e) {
 
 function mouseMoveHandler(e) {
   const relativeX = e.clientX - canvas.offsetLeft;
+  if (relativeX > 0 && relativeX < canvas.width) {
+    paddle.x = relativeX - paddle.width / 2;
+  }
+}
+
+function touchMoveHandler(e) {
+  const relativeX = e.touches[0].clientX - canvas.offsetLeft;
   if (relativeX > 0 && relativeX < canvas.width) {
     paddle.x = relativeX - paddle.width / 2;
   }
@@ -158,8 +166,8 @@ class Ball {
       for (let r = 0; r < brickRowCount; r++) {
         const brick = bricks[c][r];
         if (brick.status === 1) {
-          let ballRelX = this.x - brick.x;
-          let ballRelY = this.y - brick.y;
+          let ballRelX = this.x + this.dx - brick.x;
+          let ballRelY = this.y + this.dy - brick.y;
           if (
             ballRelX > -this.ballRadius &&
             ballRelX < brickWidth + this.ballRadius &&
@@ -254,8 +262,11 @@ for (let c = 0; c < brickColumnCount; c++) {
   for (let r = 0; r < brickRowCount; r++) {
     const brickX = c * (brickWidth + brickPadding) + brickOffsetLeft;
     const brickY = r * (brickHeight + brickPadding) + brickOffsetTop;
-
-    bricks[c][r] = new Brick(brickX, brickY, 1, randomRGB());
+    if (c === 3 && (r === 0 || r === 1)) {
+      bricks[c][r] = new Brick(brickX, brickY, 1, "red");
+    } else {
+      bricks[c][r] = new Brick(brickX, brickY, 1, "blue");
+    }
   }
 }
 
