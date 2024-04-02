@@ -97,7 +97,7 @@ function random(min, max) {
 }
 
 // function to generate random color
-function randomRGB() {
+function randomHWB() {
   return `hwb(${random(0, 360)} ${random(0, 50)}% ${random(0, 10)}%)`;
 }
 
@@ -243,7 +243,7 @@ class Brick {
 }
 
 // Create ball
-const ball = new Ball(x, y, dx, dy, ballRadius, randomRGB());
+const ball = new Ball(x, y, dx, dy, ballRadius, randomHWB());
 
 // Create paddle
 const paddle = new Paddle(
@@ -252,7 +252,7 @@ const paddle = new Paddle(
   paddleX,
   canvas.height - height,
   paddleDx,
-  randomRGB()
+  randomHWB()
 );
 
 // Create bricks
@@ -263,9 +263,9 @@ for (let c = 0; c < brickColumnCount; c++) {
     const brickX = c * (brickWidth + brickPadding) + brickOffsetLeft;
     const brickY = r * (brickHeight + brickPadding) + brickOffsetTop;
     if (c === 3 && (r === 0 || r === 1)) {
-      bricks[c][r] = new Brick(brickX, brickY, 1, "red");
+      bricks[c][r] = new Brick(brickX, brickY, 1, randomHWB);
     } else {
-      bricks[c][r] = new Brick(brickX, brickY, 1, "blue");
+      bricks[c][r] = new Brick(brickX, brickY, 1, randomHWB);
     }
   }
 }
