@@ -263,9 +263,9 @@ for (let c = 0; c < brickColumnCount; c++) {
     const brickX = c * (brickWidth + brickPadding) + brickOffsetLeft;
     const brickY = r * (brickHeight + brickPadding) + brickOffsetTop;
     if (c === 3 && (r === 0 || r === 1)) {
-      bricks[c][r] = new Brick(brickX, brickY, 1, randomHWB);
+      bricks[c][r] = new Brick(brickX, brickY, 1, randomHWB());
     } else {
-      bricks[c][r] = new Brick(brickX, brickY, 1, randomHWB);
+      bricks[c][r] = new Brick(brickX, brickY, 1, randomHWB());
     }
   }
 }
